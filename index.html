@@ -63,13 +63,7 @@
 
         // Fetch and display existing messages
         function fetchMessages() {
-            fetch(apiGetUrl, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    "Access-Control-Allow-Origin": "*"
-                }
-            })
+            fetch(apiGetUrl, {mode: 'cors'})
                 .then(response => response.json())
                 .then(data => {
                     const messageList = document.getElementById('messageList');
