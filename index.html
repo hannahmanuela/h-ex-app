@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        #messages {
+            margin-bottom: 20px;
+        }
+        #messages ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        #messages li {
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input[type="text"], textarea {
+            padding: 8px;
+            margin-right: 10px;
+            width: 300px;
+        }
+        textarea {
+            height: 80px;
+            width: 300px;
+        }
+        button {
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Messages</h1>
+    
+    <!-- Display messages fetched from API -->
+    <div id="messages">
+        <h2>Existing Messages</h2>
+        <ul id="messageList"></ul>
+    </div>
+
+    <!-- Form to submit a new message -->
+    <h2>Submit a New Message</h2>
+    <form id="messageForm">
+        <input type="text" id="author" placeholder="Your Name" required />
+        <textarea id="messageBody" placeholder="Enter your message" required></textarea>
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        const apiGetUrl = 'https://c0l2z2tdg8.execute-api.us-east-1.amazonaws.com/HExDeployFetch';  // Replace with your GET API Gateway URL
+        const apiPostUrl = 'https://c0l2z2tdg8.execute-api.us-east-1.amazonaws.com/HExDeploySubmit'; // Replace with your POST API Gateway URL
+
+        // Fetch and display existing messages
+        function fetchMessages() {
+            fetch(apiGetUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const messageList = document.getElementById('messageList');
+                    messageList.innerHTML = '';  // Clear current messages
+
+                    if (data.messages && data.messages.length > 0) {
+                        data.messages.forEach(message => {
+                            const li = document.createElement('li');
+                            li.innerHTML = `
+                                <strong>${message.author}</strong> (${new Date(message.id).toLocaleString()}):
+                                <p>${message.body}</p>
+                            `;
+                            messageList.appendChild(li);
+                        });
+                    } else {
+                        messageList.innerHTML = '<li>No messages available.</li>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching messages:', error);
+                });
+        }
+
+        // Handle the submission of the form to send a new message
+        document.getElementById('messageForm').addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent form from submitting normally
+
+            const author = document.getElementById('author').value.trim();
+            const body = document.getElementById('messageBody').value.trim();
+
+            if (!author || !body) return;
+
+            const newMessage = {
+                author: author,
+                body: body
+            };
+
+            fetch(apiPostUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newMessage)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Optionally handle success response
+                console.log('Message created:', data);
+                fetchMessages();  // Refresh the message list
+            })
+            .catch(error => {
+                console.error('Error posting message:', error);
+            });
+
+            // Clear input fields after submission
+            document.getElementById('author').value = '';
+            document.getElementById('messageBody').value = '';
+        });
+
+        // Load messages when the page loads
+        window.onload = fetchMessages;
+    </script>
+</body>
+</html>
