@@ -66,11 +66,13 @@
             fetch(apiGetUrl)
                 .then(response => response.json())
                 .then(data => {
-                    const messageList = document.getElementById('messages');
+                    const messageList = document.getElementById('messageList');
                     messageList.innerHTML = '';  // Clear current messages
 
-                    if (data.messages && data.messages.length > 0) {
-                        data.messages.forEach(message => {
+                    const bodyData = JSON.parse(data.body);
+
+                    if (bodyData.messages && bodyData.messages.length > 0) {
+                        bodyData.messages.forEach(message => {
                             const li = document.createElement('li');
                             li.innerHTML = `
                                 <strong>${message.author}</strong> (${new Date(message.id).toLocaleString()}):
