@@ -63,13 +63,20 @@
 
         // Fetch and display existing messages
         function fetchMessages() {
-            fetch(apiGetUrl)
+            fetch(apiGetUrl, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Access-Control-Allow-Origin": "*"
+                }
+            })
                 .then(response => response.json())
                 .then(data => {
                     const messageList = document.getElementById('messageList');
                     messageList.innerHTML = '';  // Clear current messages
 
                     const bodyData = JSON.parse(data.body);
+                    console.log(bodyData)
 
                     if (bodyData.messages && bodyData.messages.length > 0) {
                         bodyData.messages.forEach(message => {
@@ -106,7 +113,8 @@
             fetch(apiPostUrl, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    "Access-Control-Allow-Origin": "*",
                 },
                 body: JSON.stringify(newMessage)
             })
