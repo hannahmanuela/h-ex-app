@@ -58,8 +58,8 @@
     </form>
 
     <script>
-        const apiGetUrl = 'https://c0l2z2tdg8.execute-api.us-east-1.amazonaws.com/HExDeployFetch';  // Replace with your GET API Gateway URL
-        const apiPostUrl = 'https://c0l2z2tdg8.execute-api.us-east-1.amazonaws.com/HExDeploySubmit'; // Replace with your POST API Gateway URL
+        const apiGetUrl = 'https://c0l2z2tdg8.execute-api.us-east-1.amazonaws.com/HExDeploy/Fetch';  // Replace with your GET API Gateway URL
+        const apiPostUrl = 'https://c0l2z2tdg8.execute-api.us-east-1.amazonaws.com/HExDeploy/Submit'; // Replace with your POST API Gateway URL
 
         // Fetch and display existing messages
         function fetchMessages() {
@@ -70,7 +70,7 @@
                     messageList.innerHTML = '';  // Clear current messages
 
                     const bodyData = JSON.parse(data.body);
-                    console.log(bodyData)
+                    console.log(bodyData);
 
                     if (bodyData.messages && bodyData.messages.length > 0) {
                         bodyData.messages.forEach(message => {
