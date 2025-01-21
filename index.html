@@ -63,21 +63,20 @@
 
         // Fetch and display existing messages
         function fetchMessages() {
-            fetch(apiGetUrl, {mode: 'cors'})
+            console.log("here");
+            fetch(apiGetUrl)
                 .then(response => response.json())
                 .then(data => {
                     const messageList = document.getElementById('messageList');
                     messageList.innerHTML = '';  // Clear current messages
+                    console.log(data);
 
-                    const bodyData = JSON.parse(data.body);
-                    console.log(bodyData);
-
-                    if (bodyData.messages && bodyData.messages.length > 0) {
-                        bodyData.messages.forEach(message => {
+                    if (data.messages && data.messages.length > 0) {
+                        data.messages.forEach(message => {
                             const li = document.createElement('li');
                             li.innerHTML = `
-                                <strong>${message.author}</strong> (${new Date(message.id).toLocaleString()}):
-                                <p>${message.body}</p>
+                                <strong>${message.author}</strong> (${new Date(Number(message.id)).toLocaleString()}):
+                                <p>${message.message}</p>
                             `;
                             messageList.appendChild(li);
                         });
